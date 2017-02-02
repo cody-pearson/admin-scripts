@@ -1,0 +1,86 @@
+#####################################################################
+#
+# Command examples i've found/created over the years
+# All commands/statements will be in bash unless specified otherwise
+# Date Modified: 2 Feb 17  //CP
+#
+#####################################################################
+
+#List all file extensions in a dir
+find . -type f | awk -F'.' '{print $NF}' | sort| uniq -c | sort -g
+
+#Currently mounted filesystems in nice layout
+mount | column -t
+
+#Compare a remote file with a local file
+ssh user@host cat /path/to/remotefile | diff /path/to/localfile -
+
+#List of commands you use most often
+history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
+
+#Display top ten processes - sorted by memory usage
+ps aux | sort -nk +4 | tail
+
+#Quickly rename a file
+mv filename.{old,new}
+
+#List programs w/ open ports and connections
+lsof -i
+
+#Show a file in less w/out wrapping long lines
+less -S somefile
+
+#Copy SSH pub key for passwordless login
+ssh-copy-id username@hostname
+
+#Graphical tree of sub-dirs
+ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
+
+#Copy a file and watch it's progress
+pv sourcefile > destfile
+rsync -P file1 file2
+
+#Make dir including intermediate dirs
+mkdir -p /a/long/directory/path
+
+#Graph # of connections for each host
+netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | awk '{ printf("%s\t%s\t",$2,$1) ; 
+for (i = 0; i < $1; i++) {printf("*")}; print "" }'
+
+#Search for a <pattern> inside all files in current dir
+grep -RnisI <pattern> *
+
+#4-way scrollable process tree w/ deatails
+ps awwfux | less -S
+
+#Run a fsck (file system check) on next boot
+touch /forcefsck
+
+#Create quick back-up/copy of a file
+cp file{,.bak}
+
+#Recrsively change perms on files, leave dirs alone
+find ./ -type f -exec chmod 644 {} +
+
+#Find filed modified w/in the last 60 mins
+find / -mmin -60 -type f
+
+#Find all files larger than 500M
+find / -type f -size +500M
+
+#Computer hardware overview
+lshw -html > hardware.html
+for host in host1 host2 host3; do 
+  ssh $host "lshw -html" > $host_hardware.html; 
+done 
+  
+#Setup ssh keys for all systems
+ssh-keygen &&
+for host in $(cat /path/to/hosts.txt); do
+  ssh-copy-id "$host"
+done
+
+#Remote command execution
+for host in $(cat /path/to/hosts.txt); do
+ ssh user@"$host" `sudo <some command> > /path/to/logs/<some command>.`date +"%Y%m%d_$H%M%S"`
+done
