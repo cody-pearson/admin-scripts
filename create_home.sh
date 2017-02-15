@@ -8,10 +8,10 @@
 #usage           :bash create_home.sh or ./create_home.sh
 #notes           :create/setup single user home dir
 #Todo            : 1) more than 1 user at a time
-                   2) logging
+#                   2) logging
 #==========================================================
 
-## Varialbles
+## Variables
 hn=$(hostname -a)
 launch_dir=/path/to/launchers
 
