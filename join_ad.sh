@@ -8,7 +8,7 @@
 #usage           :bash join_ad.sh or ./join_ad.sh
 #notes           :script copies config file from share dir.
 #TODO            : 1) better error checking
-                   2) better service statuses
+#                  2) better service statuses
 #==========================================================
 
 ## Variables
@@ -72,7 +72,7 @@ chmod 644 /etc/pam.d/password-auth-ac
 chmod 644 /etc/postfix/main.cf
 echo "Finished changing permissions on files "
 
-## Restart / Auto-Start services
+## Restart NTP
 echo "Checking NTP service "
 service ntpd status > /dev/null
   if [[ "$?" -eq 0 ]]; then
@@ -83,6 +83,7 @@ service ntpd status > /dev/null
     service ntpd start > /dev/null
   fi
 
+## Auto-Start NTP
 chkconfig --list ntpd | grep "3:off" > /dev/null
   if [[ "$?" -eq 0 ]]; then
     echo "NTP is set to start at boot... Good "
@@ -91,6 +92,7 @@ chkconfig --list ntpd | grep "3:off" > /dev/null
     chkconfig ntpd on
   fi
   
+## Restart WINBIND
 echo "Checking winbind service"
 service winbind status > /dev/null
   if [[ "$?" -eq 0 ]]; then
@@ -101,6 +103,7 @@ service winbind status > /dev/null
     service winbind start > /dev/null
   fi
   
+## Auto-Start WINBIND
 chkconfig --list winbind | grep "3:off" > /dev/null
   if [[ "$?" -eq 0 ]]; then
     echo "Winbind is set to start at boot... Good "
@@ -111,8 +114,8 @@ chkconfig --list winbind | grep "3:off" > /dev/null
   
 ## Prompt for Admin AD account -- Join AD Domain
 read -p "Please enter your Administrator account username:  "  admin
-  net ads join -U "$admin" osName=RHEL osVer=6.8
+net ads join -U "$admin" osName=RHEL osVer=6.8
  
- ## Reboot for changes to take effect
- read -p "Please press <Enter> to restart the system. "
- init 6
+## Reboot for changes to take effect
+read -p "Please press <Enter> to restart the system. "
+init 6
