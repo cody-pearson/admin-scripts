@@ -1,17 +1,18 @@
 #!/bin/bash 
 #==========================================================
-#title           :app_logs.sh
-#description     :Searches through $app logs for errors.
-#author          :Pearson
-#date            :2017 Feb 5
-#version         :1.0    
-#usage           :bash app_logs.sh or ./app_logs.sh
-#notes           :Specific hardcoded paths based on $app.
+# title           :app_logs.sh
+# description     :Searches through $app logs for errors.
+# author          :Pearson
+# date            :2017 Mar 3
+# version         :1.1    
+# usage           :bash app_logs.sh or ./app_logs.sh
+# notes           :Specific hardcoded paths based on $app.
+# TODO            : 1)
 #==========================================================
 
 #Variables
 logdir=/path/to/app/logs
-scriptdir=/path/to/script
+#scriptdir=/path/to/script
 
 ## Checking that $appuser is running the script
 if [[ "$USER" != appuser ]]; then
