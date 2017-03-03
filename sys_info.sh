@@ -25,10 +25,10 @@ fi
 ## Check for sysinfo file
 if [[ -f "$info_log" ]]; then
   echo "$hn appears to already have a system info file"
-  read -p "Would you like to delete it? [Y]/[N]  "  dfile
+  read -rp "Would you like to delete it? [Y]/[N]  "  dfile
     if [[ "$dfile" == [Yy][Ee][Ss] ]] || [[ "$dfile" == [Yy] ]]; then
       echo "Deleting $info_log"
-      rm -f $info_log
+      rm -f "$info_log"
       echo "Creating a new info file for $hn  "
     elif [[ "$dfile" == [Nn][Oo] ]] || [[ "$dfile" == [Nn] ]]; then
       echo "You may want to copy $info_log"
@@ -40,7 +40,7 @@ if [[ -f "$info_log" ]]; then
       exit
     fi
 else
-  touch $info_log 2> /dev/null
+  touch "$info_log" 2> /dev/null
     if [[ "$?" -ne "0" ]]; then
       echo "***ERROR*** There was an issue creating the sys_info file"
       exit
@@ -51,7 +51,7 @@ fi
 
 ## Hostname
 echo "Getting Hostname"
-echo -n "Hostname:  " > "$info_file"
+echo -n "Hostname:  " > "$info_log"
 hostname -a >> "$info_log"
 
 ## Hardware Serial Number
@@ -62,12 +62,12 @@ dmidecode -t 1 | grep -e 'Manufacturer' -e 'Product Name' -e 'Serial Number' | h
 ## Hard Drive Serial Number
 echo "Reading Hard Drive Serial Number"
 echo -n "Hard Drive Serial Number:  " >> "$info_log"
-hdparm -i /dev/sda | grep -i SerialNo=* >> "$info_log"
+hdparm -i /dev/sda | grep -i "SerialNo=*" >> "$info_log"
 
 ## MAC Addresses
 echo "Getting MAC Address"
 echo -n "MAC Addresses:  " >> "$info_log"
-ifconfig -a | grep -i HWaddr >> "$info_log"
+ifconfig -a | grep -i "HWaddr" >> "$info_log"
 
 echo ""
 echo "Your sys_info file is located at "$info_log"  "
