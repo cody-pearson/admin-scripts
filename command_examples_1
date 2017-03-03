@@ -1,86 +1,120 @@
-#####################################################################
-#
-# Command examples i've found/created over the years
-# All commands/statements will be in bash unless specified otherwise
-# Date Modified: 2 Feb 17
-#
-#####################################################################
+#========================================================== 
+#title           :command_examples_1 
+#description     :found/created examples 
+#author          :Pearson 
+#date            :2017 Mar 3 
+#version         :1.0     
+#usage           :cat command_examples_1 
+#notes           :constantly changing 
+#TODO            : 1) Add more examples 
+#                  2)  
+#========================================================== 
 
-#List all file extensions in a dir
+## List all file extensions in a dir
 find . -type f | awk -F'.' '{print $NF}' | sort| uniq -c | sort -g
 
-#Currently mounted filesystems in nice layout
+## Currently mounted filesystems in nice layout
 mount | column -t
 
-#Compare a remote file with a local file
+## Compare a remote file with a local file
 ssh user@host cat /path/to/remotefile | diff /path/to/localfile -
 
-#List of commands you use most often
+## List of commands you use most often
 history | awk '{a[$2]++}END{for(i in a){print a[i] " " i}}' | sort -rn | head
 
-#Display top ten processes - sorted by memory usage
+## Display top ten processes - sorted by memory usage
 ps aux | sort -nk +4 | tail
 
-#Quickly rename a file
+## Quickly rename a file
 mv filename.{old,new}
 
-#List programs w/ open ports and connections
+## List programs w/ open ports and connections
 lsof -i
 
-#Show a file in less w/out wrapping long lines
+## Show a file in less w/out wrapping long lines
 less -S somefile
 
-#Copy SSH pub key for passwordless login
+## Copy SSH pub key for passwordless login
 ssh-copy-id username@hostname
 
-#Graphical tree of sub-dirs
+## Graphical tree of sub-dirs
 ls -R | grep ":$" | sed -e 's/:$//' -e 's/[^-][^\/]*\//--/g' -e 's/^/   /' -e 's/-/|/'
 
-#Copy a file and watch it's progress
+## Copy a file and watch it's progress
 pv sourcefile > destfile
 rsync -P file1 file2
 
-#Make dir including intermediate dirs
+## Make dir including intermediate dirs
 mkdir -p /a/long/directory/path
 
-#Graph # of connections for each host
+## Graph # of connections for each host
 netstat -an | grep ESTABLISHED | awk '{print $5}' | awk -F: '{print $1}' | sort | uniq -c | awk '{ printf("%s\t%s\t",$2,$1) ; 
 for (i = 0; i < $1; i++) {printf("*")}; print "" }'
 
-#Search for a <pattern> inside all files in current dir
+## Search for a <pattern> inside all files in current dir
 grep -RnisI <pattern> *
 
-#4-way scrollable process tree w/ deatails
+# #4-way scrollable process tree w/ deatails
 ps awwfux | less -S
 
-#Run a fsck (file system check) on next boot
+## Run a fsck (file system check) on next boot
 touch /forcefsck
 
-#Create quick back-up/copy of a file
+## Create quick back-up/copy of a file
 cp file{,.bak}
 
-#Recrsively change perms on files, leave dirs alone
+## Recrsively change perms on files, leave dirs alone
 find ./ -type f -exec chmod 644 {} +
 
-#Find filed modified w/in the last 60 mins
+## Find filed modified w/in the last 60 mins
 find / -mmin -60 -type f
 
-#Find all files larger than 500M
+## Find all files larger than 500M
 find / -type f -size +500M
 
-#Computer hardware overview
+## Computer hardware overview
 lshw -html > hardware.html
 for host in host1 host2 host3; do 
   ssh $host "lshw -html" > $host_hardware.html; 
 done 
   
-#Setup ssh keys for all systems
+## Setup ssh keys for all systems
 ssh-keygen &&
 for host in $(cat /path/to/hosts.txt); do
   ssh-copy-id "$host"
 done
 
-#Remote command execution
+## Remote command execution
 for host in $(cat /path/to/hosts.txt); do
- ssh user@"$host" `sudo <some command> > /path/to/logs/<some command>.`date +"%Y%m%d_$H%M%S"`
+ ssh user@"$host" 'sudo <some command> > /path/to/logs/<some command>.$(date +"%Y%m%d_$H%M%S")'
 done
+
+## Relational Operators
+-lt (<) LESS THAN
+-gt (>) GREATER THAN
+-le (<=) LESS OR EQUAL
+-ge (>=) GREATER OR EQUAL
+-eq (==) EQUAL
+-ne (!=) NOT EQUAL
+
+## Primary Expressions
+[ -a FILE ] True if FILE exists
+[ -e FILE ] True if FILE exists
+[ -f FILE ] True if FILE exists and is a regular file
+[ -r FILE ] True if FILE exists and is readable
+[ -s FILE ] True if FILE exists and has a size greater than zero
+[ -w FILE ] True if FILE exists and is writable
+[ -x FILE ] True if FILE exists and is executable
+[ -O FILE ] True if FILE exists and is owned by the effective user ID
+[ -G FILE ] True if FILE exists and is owned by the effective group ID
+[ -z STRING ] True of the length if "STRING" is zero
+[ -n STRING ] or [ STRING ] True if the length of "STRING" is non-zero
+[ STRING1 != STRING2 ]  True if the strings are not equal
+[ ! EXPR ] True if EXPR is false
+[ ( EXPR ) ] Returns the value of EXPR -- This may be used to override the normal precedence of operators
+[ EXPR1 -a EXPR2 ] True if both EXPR1 and EXPR2 are true
+[ EXPR1 -o EXPR2 ] True if either EXPR1 or EXPR2 is true 
+
+## If your script exits, provide a meaningful exit code.  
+exit 0 (zero) if everything is okay
+exit 1 - in general non-zero - if there was an error
