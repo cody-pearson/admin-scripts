@@ -18,7 +18,7 @@ banner_path=/path/to/config/dir
 ## Run as root
 if [[ "$UID" -ne 0 ]]; then
   echo "This script must be ran as root..."
-  exit
+  exit 1
 fi
 
 ## Checking for previous classification-banner
@@ -61,7 +61,7 @@ if [[ ! -f /usr/local/bin/classification-banner.py ]]; then
     chmod 755 /usr/local/bin/classification-banner.py
 else
   echo "classification-banner is already on the system"
-fi    
+fi  
 
 ## Auto start classification-banner 
 if [[ ! -f /etc/xdg/autostart/classification-banner.desktop ]]; then
@@ -72,12 +72,18 @@ if [[ ! -f /etc/xdg/autostart/classification-banner.desktop ]]; then
 fi
 
 ## Checking for background image
-if [[ -z "$(egrep 'System Banner' /usr/share/backgrounds/default.xml)" ]]; then
+if [[ -z "$(egrep "System Banner" /usr/share/backgrounds/default.xml)" ]]; then
   echo "- installing gdm login background"
     cp /usr/share/backgrounds/default.xml /usr/share/backgrounds/default.xml."$now"
     cp "$banner_path"/default.xml /usr/share/backgrounds/default.xml
     chmod 644 /usr/share/backgrounds/default.xml
 fi
+
+## Update background with selected classification
+echo "- updating gdm login background"
+  cp /usr/share/backgrounds/default.xml /usr/share/backgrounds/default.xml."$now"
+  sed -ci -e "/1200_green/ s/green/$CLASSLOGO/" /usr/share/backgrounds/default.xml
+  chmod 644 /usr/share/backgrounds/default.xml
 
 ## Setting system classification information
 if [[ -f /etc/classification-banner ]] && [[ ! -z "$CLASSIFICATION" ]]; then
@@ -88,9 +94,3 @@ message = '$CLASSIFICATION'
 $($CLASS_COLORS)
 EOF
 fi
-  
-## Update background with selected classification
-echo "- updating gdm login background"
-  cp /usr/share/backgrounds/default.xml /usr/share/backgrounds/default.xml."$now"
-  sed -ci -e "/1200_green/ s/green/$CLASSLOGO/" /usr/share/backgrounds/default.xml
-  chmod 644 /usr/share/backgrounds/default.xml
